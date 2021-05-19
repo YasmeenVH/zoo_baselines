@@ -18,12 +18,14 @@ gae_lambda = 0.3429
 entropy_coef = 0.1316
 value_loss_coef = 0.3638
 max_grad_norm = 0.3406
-num_steps = 4240
 optimizer = "adam"
 ppo_epoch = 15
 num_mini_batch = 25
 clip_param = 0.3758
 use_linear_lr_decay = True
+
+n_steps = 10000  # The number of steps to run for each environment per update (i.e. batch size is n_steps * n_env where n_env is number of environment copies running in parallel)
+n_updates = 4240
 
 algo = "ppo"
 gail = False
@@ -39,7 +41,7 @@ log_interval = 10
 save_interval = 100
 eval_interval = None
 num_env_steps = 1e6
-env_name = "GrowSpaceEnv-Control-v0" # "GrowSpaceSpotlight-MnistMix-v0"
+env_name = "GrowSpaceEnv-Control-v0"  # "GrowSpaceSpotlight-MnistMix-v0"
 log_dir = "/tmp/gym/"
 save_dir = "./trained_models/"
 use_proper_time_limits = False
