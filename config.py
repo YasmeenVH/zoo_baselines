@@ -38,7 +38,7 @@ custom_gym = "growspace"
 log_interval = 10
 save_interval = 100
 eval_interval = None
-num_updates = 1e6
+num_updates = 1e5
 env_name = "GrowSpaceEnv-Control-v0"  # "GrowSpaceSpotlight-MnistMix-v0"
 log_dir = "/tmp/gym/"
 save_dir = "./trained_models/"
@@ -52,6 +52,6 @@ experiment_buddy.register(locals())
 tensorboard = experiment_buddy.deploy(
     "",
     sweep_yaml="",
-    proc_num=1,
+    proc_num=3,
     wandb_kwargs={"entity": "growspace"}
 )

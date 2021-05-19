@@ -11,7 +11,7 @@ import config
 from callbacks import WandbStableBaselines3Callback
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-print("Running on {}Device:", device)
+print("Running on Device:", device)
 
 
 def ppo_stable_baselines_training(save_model=False):

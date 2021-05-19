@@ -5,3 +5,4 @@ sortedcontainers
 sklearn
 numba
 array2gif
+stable-baselines[mpi]
