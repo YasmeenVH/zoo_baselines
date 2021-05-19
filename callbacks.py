@@ -113,7 +113,6 @@ class WandbStableBaselines3Callback(BaseCallbackBaselines3):
         config.tensorboard.run.log({"video": wandb.Video('replay.gif', fps=4, format="gif")}, commit=True)
         config.tensorboard.run.history._flush()
 
-        # env.reset()
         env.close()
 
 
@@ -220,5 +219,4 @@ class WandbStableBaselines2Callback(BaseCallbackBaselines2):
         config.tensorboard.run.log({"video": wandb.Video('replay.gif', fps=4, format="gif")}, commit=True)
         config.tensorboard.run.history._flush()
 
-        # env.reset()
         env.close()
