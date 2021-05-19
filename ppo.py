@@ -10,8 +10,11 @@ from stable_baselines3.common.env_util import make_vec_env
 import config
 from callbacks import WandbStableBaselines3Callback
 
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+print("Running on {}Device:", device)
 
-def ppo_stable_baselines_training():
+
+def ppo_stable_baselines_training(save_model=False):
     wandb.run = config.tensorboard.run
     wandb.tensorboard.patch(save=False, tensorboardX=True)
 
@@ -26,7 +29,8 @@ def ppo_stable_baselines_training():
         max_grad_norm=config.max_grad_norm, vf_coef=config.value_loss_coef, batch_size=config.num_mini_batch
     )
     model.learn(total_timesteps=config.num_steps, log_interval=1, callback=WandbStableBaselines3Callback())
-    model.save(f"{config.env_name}_stable_baselines_ppo")
+    if save_model:
+        model.save(f"{config.env_name}_stable_baselines_ppo")
 
 
 if __name__ == "__main__":

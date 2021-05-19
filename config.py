@@ -33,7 +33,7 @@ gail_epoch = 5
 alpha = 0.99
 seed = np.random.randint(1, 80, size=1)  # didnt change
 cuda_deterministic = False
-num_processes = 1
+num_processes = 4
 custom_gym = "growspace"
 log_interval = 10
 save_interval = 100
@@ -50,7 +50,7 @@ momentum = 0.9  # if sgd is used
 
 experiment_buddy.register(locals())
 tensorboard = experiment_buddy.deploy(
-    "mila",
+    "",
     sweep_yaml="",
     proc_num=1,
     wandb_kwargs={"entity": "growspace"}

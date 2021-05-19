@@ -1,11 +1,30 @@
+import os
+import array2gif
+import config
+import cv2
+
+import gym
+import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import animation
 from stable_baselines3.common.callbacks import BaseCallback
 
 import wandb
-import numpy as np
-from stable_baselines3.common.callbacks import BaseCallback
 
-import wandb
+
+def decorator_to_disable_view_window(func):
+    def wrapper(*args):
+        from gym.envs.classic_control import rendering
+        org_constructor = rendering.Viewer.__init__
+
+        def constructor(self, *args, **kwargs):
+            org_constructor(self, *args, **kwargs)
+            self.window.set_visible(visible=False)
+
+        rendering.Viewer.__init__ = constructor
+        return func(*args)
+
+    return wrapper
 
 
 class WandbStableBaselines3Callback(BaseCallback):
@@ -34,7 +53,7 @@ class WandbStableBaselines3Callback(BaseCallback):
         """
         This method is called before the first rollout starts.
         """
-        pass
+        self.render_gif_on_wandb()
 
     def _on_rollout_start(self) -> None:
         """
@@ -126,5 +145,25 @@ class WandbStableBaselines3Callback(BaseCallback):
         """
         pass
 
+    # @decorator_to_disable_view_window
+    def render_gif_on_wandb(self):
+        images = []
+        if hasattr(self.training_env, "envs"):
+            env = gym.wrappers.Monitor(self.training_env.envs[0], "recording", force=True, mode="evaluation")
+        else:
+            env = gym.wrappers.Monitor(self.training_env, "recording", force=True, mode="evaluation")
+        obs = env.reset()
+        for i in range(500):
+            action, _states = self.model.predict(obs)
+            obs, rewards, dones, info = env.step(action)
+            if dones:
+                break
+            obs = obs.transpose(1,0,2)
+            images.append(obs)
 
+        array2gif.write_gif(images, 'replay.gif', fps=4)
+        config.tensorboard.run.log({"video": wandb.Video('replay.gif', fps=4, format="gif")}, commit=True)
+        config.tensorboard.run.history._flush()
 
+        env.reset()
+        env.close()
