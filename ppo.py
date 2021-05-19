@@ -10,6 +10,9 @@ from stable_baselines3.common.env_util import make_vec_env
 import config
 from callbacks import WandbStableBaselines3Callback
 
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+print("Device:", device)
+
 
 def ppo_stable_baselines_training():
     wandb.run = config.tensorboard.run
