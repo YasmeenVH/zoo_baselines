@@ -1,12 +1,10 @@
 import array2gif
 import torch
-import gym
-import numpy as np
-from stable_baselines3.common.callbacks import BaseCallback as BaseCallbackBaselines3
+import wandb
 from stable_baselines.common.callbacks import BaseCallback as BaseCallbackBaselines2
+from stable_baselines3.common.callbacks import BaseCallback as BaseCallbackBaselines3
 
 import config
-import wandb
 
 
 class WandbStableBaselines3Callback(BaseCallbackBaselines3):
