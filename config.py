@@ -23,9 +23,7 @@ ppo_epoch = 15
 num_mini_batch = 25
 clip_param = 0.3758
 use_linear_lr_decay = True
-
-n_steps = 10000  # The number of steps to run for each environment per update (i.e. batch size is n_steps * n_env where n_env is number of environment copies running in parallel)
-n_updates = 4240
+num_steps = 10000
 
 algo = "ppo"
 gail = False
@@ -40,7 +38,7 @@ custom_gym = "growspace"
 log_interval = 10
 save_interval = 100
 eval_interval = None
-num_env_steps = 1e6
+num_updates = 1e6
 env_name = "GrowSpaceEnv-Control-v0"  # "GrowSpaceSpotlight-MnistMix-v0"
 log_dir = "/tmp/gym/"
 save_dir = "./trained_models/"

@@ -24,11 +24,11 @@ def ppo_stable_baselines_training(save_model=False):
     envs = make_vec_env(config.env_name, n_envs=config.num_processes)
 
     model = PPO(
-        "CnnPolicy", envs, verbose=1, tensorboard_log="./runs/", clip_range=config.clip_param, n_steps=config.n_steps,
+        "CnnPolicy", envs, verbose=1, tensorboard_log="./runs/", clip_range=config.clip_param, n_steps=config.num_steps,
         learning_rate=config.lr, gamma=config.gamma, gae_lambda=config.gae_lambda, ent_coef=config.entropy_coef,
         max_grad_norm=config.max_grad_norm, vf_coef=config.value_loss_coef, batch_size=config.num_mini_batch
     )
-    model.learn(total_timesteps=config.n_updates, log_interval=1, callback=WandbStableBaselines3Callback())
+    model.learn(total_timesteps=config.num_updates, log_interval=1, callback=WandbStableBaselines3Callback())
     if save_model:
         model.save(f"{config.env_name}_stable_baselines_ppo")
 

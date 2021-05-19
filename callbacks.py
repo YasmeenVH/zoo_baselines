@@ -31,7 +31,7 @@ class WandbStableBaselines3Callback(BaseCallback):
         """
         This method is called before the first rollout starts.
         """
-        # self.render_gif_on_wandb()
+        pass
 
     def _on_rollout_start(self) -> None:
         """
@@ -56,7 +56,6 @@ class WandbStableBaselines3Callback(BaseCallback):
                 self.episode_rewards.append(info['episode']['r'])
                 self.episode_length.append(info['episode']['l'])
                 wandb.log({"Episode_Reward": info['episode']['r']})
-                self.count_time_steps += 1
 
             if 'new_branches' in info.keys():
                 self.episode_branches.append(info['new_branches'])
@@ -85,37 +84,6 @@ class WandbStableBaselines3Callback(BaseCallback):
         """
         This event is triggered before updating the policy.
         """
-        wandb.log({"Reward Min": np.min(self.episode_rewards)})
-        wandb.log({"Summed Reward": np.sum(self.episode_rewards)})
-        wandb.log({"Reward Mean": np.mean(self.episode_rewards)})
-        wandb.log({"Reward Max": np.max(self.episode_rewards)})
-        # wandb.log({"Number of Mean New Branches": np.mean(self.episode_branches)}, step=self.count_time_steps)
-        # wandb.log({"Number of Max New Branches": np.max(self.episode_branches)}, step=self.count_time_steps)
-        # wandb.log({"Number of Min New Branches": np.min(self.episode_branches)}, step=self.count_time_steps)
-        # wandb.log({"Number of Mean New Branches of Plant 1": np.mean(self.episode_branch1)}) # , # step=self.count_time_steps)
-        # wandb.log({"Number of Mean New Branches of Plant 2": np.mean(self.episode_branch2)}) # , step=self.count_time_steps)
-        # wandb.log({"Number of Total Displacement of Light": np.sum(self.episode_light_move)}) #, # step=self.count_time_steps)
-        # wandb.log({"Mean Light Displacement": self.episode_light_move}, step=self.count_time_steps)
-        # wandb.log({"Mean Light Width": self.episode_light_width}, step=self.count_time_steps)
-        # wandb.log({"Number of Steps in Episode with Tree is as close as possible": np.sum(self.episode_success)},
-        #           step=self.count_time_steps)
-        # wandb.log({"Displacement of Light Position": wandb.Histogram(self.episode_light_move)},
-        #           step=self.count_time_steps)
-        # wandb.log({"Displacement of Beam Width": wandb.Histogram(self.episode_light_width)}, step=self.count_time_steps)
-        # wandb.log({"Mean Plant Pixel": np.mean(self.episode_plantpixel)}, step=self.count_time_steps)
-        # wandb.log({"Summed Plant Pixel": np.sum(self.episode_plantpixel)}, step=self.count_time_steps)
-        # wandb.log({"Plant Pixel Histogram": wandb.Histogram(self.episode_plantpixel)}, step=self.count_time_steps)
-        self.count_time_steps += 1
-
-        self.episode_rewards.clear()
-        self.episode_length.clear()
-        self.episode_branches.clear()
-        self.episode_branch2.clear()
-        self.episode_branch1.clear()
-        self.episode_light_move.clear()
-        self.episode_light_width.clear()
-        self.episode_success.clear()
-        self.episode_plantpixel.clear()
 
     def _on_training_end(self) -> None:
         """
