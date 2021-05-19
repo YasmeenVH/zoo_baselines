@@ -4,3 +4,4 @@ stable-baselines3[extra]
 sortedcontainers
 sklearn
 numba
+array2gif

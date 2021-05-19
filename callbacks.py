@@ -1,37 +1,17 @@
-import os
 import array2gif
-import config
-import cv2
-
+import torch
 import gym
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import animation
 from stable_baselines3.common.callbacks import BaseCallback
 
+import config
 import wandb
-
-
-def decorator_to_disable_view_window(func):
-    def wrapper(*args):
-        from gym.envs.classic_control import rendering
-        org_constructor = rendering.Viewer.__init__
-
-        def constructor(self, *args, **kwargs):
-            org_constructor(self, *args, **kwargs)
-            self.window.set_visible(visible=False)
-
-        rendering.Viewer.__init__ = constructor
-        return func(*args)
-
-    return wrapper
 
 
 class WandbStableBaselines3Callback(BaseCallback):
 
-    def __init__(self, verbose=0, enable_popping_up_window=False, model_name=None, env_name=None):
+    def __init__(self, verbose=0, model_name=None, env_name=None):
         super(WandbStableBaselines3Callback, self).__init__(verbose)
-        self.enable_popping_up_window = enable_popping_up_window
         self.model_name = model_name
         self.env_name = env_name
 
@@ -53,7 +33,7 @@ class WandbStableBaselines3Callback(BaseCallback):
         """
         This method is called before the first rollout starts.
         """
-        self.render_gif_on_wandb()
+        # self.render_gif_on_wandb()
 
     def _on_rollout_start(self) -> None:
         """
@@ -143,27 +123,29 @@ class WandbStableBaselines3Callback(BaseCallback):
         """
         This event is triggered before exiting the `learn()` method.
         """
-        pass
+        self.render_gif_on_wandb()
 
-    # @decorator_to_disable_view_window
     def render_gif_on_wandb(self):
         images = []
         if hasattr(self.training_env, "envs"):
-            env = gym.wrappers.Monitor(self.training_env.envs[0], "recording", force=True, mode="evaluation")
+            env = self.training_env.envs[0]
+            # env = gym.wrappers.Monitor(self.training_env.envs[0], "recording", force=True, mode="evaluation")
         else:
-            env = gym.wrappers.Monitor(self.training_env, "recording", force=True, mode="evaluation")
+            env = self.training_env
+            # env = gym.wrappers.Monitor(self.training_env, "recording", force=True, mode="evaluation")
         obs = env.reset()
-        for i in range(500):
-            action, _states = self.model.predict(obs)
-            obs, rewards, dones, info = env.step(action)
-            if dones:
-                break
-            obs = obs.transpose(1,0,2)
-            images.append(obs)
+        with torch.no_grad():
+            for i in range(500):
+                action, _states = self.model.predict(obs)
+                obs, rewards, dones, info = env.step(action)
+                if dones:
+                    break
+                obs = obs.transpose(1, 0, 2)
+                images.append(obs)
 
         array2gif.write_gif(images, 'replay.gif', fps=4)
         config.tensorboard.run.log({"video": wandb.Video('replay.gif', fps=4, format="gif")}, commit=True)
         config.tensorboard.run.history._flush()
 
-        env.reset()
+        # env.reset()
         env.close()
