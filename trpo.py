@@ -1,10 +1,10 @@
 # noinspection PyUnresolvedReferences
 import growspace
 import gym
-
-from stable_baselines import TRPO
-import config
 import wandb
+from stable_baselines import TRPO
+
+import config
 from callbacks import WandbStableBaselines2Callback
 
 
