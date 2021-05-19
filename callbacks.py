@@ -1,14 +1,9 @@
-import os
 import array2gif
-import config
-import cv2
-
 import gym
-import matplotlib.pyplot as plt
 import numpy as np
-from matplotlib import animation
 from stable_baselines3.common.callbacks import BaseCallback
 
+import config
 import wandb
 
 
