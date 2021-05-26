@@ -50,8 +50,8 @@ momentum = 0.9  # if sgd is used
 
 experiment_buddy.register(locals())
 tensorboard = experiment_buddy.deploy(
-    "",
+    "mila",
     sweep_yaml="",
-    proc_num=3,
-    wandb_kwargs={"entity": "growspace"}
+    proc_num=1,
+    wandb_kwargs={"entity": "zoo_baselines"}
 )
